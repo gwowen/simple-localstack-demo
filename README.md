@@ -1,14 +1,35 @@
-# Welcome to your CDK TypeScript project
+# CDK Localstack Demo
 
-This is a blank project for CDK development with TypeScript.
+This project is a simple demo for how to run Localstack together with CDK.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Howto
 
-## Useful commands
+You need to install `awslocal`, Localstack's wrapper around `awscli` that points to the endpoint `curl -v http://localhost:4566` used by Localstack.
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
+You will also need to install `aws-cdk-local` in this project by running `npm install --save-dev aws-cdk-local`, however running this has been taken care of under `scripts` in `package.json`.
+
+To get Localstack up and running, simply run `docker-compose up` to start the Localstack container.
+
+After this, run `npm run local synth` and you should be able to see an AWS stack listed (but a mock one to be deployed to Localstack!)
+
+Run `npm run local deploy` and you should see it go through the motions of deploying a stack to AWS. This, however, will be deployed to your Localstack container, rather than AWS itself.
+
+Once you have done this, run `awslocal s3 ls` and you should see something like this:
+
+```
+(base) gaz@gojira:$ awslocal s3 ls
+2024-02-06 20:02:28 localstacktest1stack-stacktestbucketb99d4ef0-04670ac
+```
+
+and run `awslocal sqs list-queues` and you should see something like:
+
+```
+(base) gaz@gojira:~$ awslocal sqs list-queues
+{
+    "QueueUrls": [
+        "http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/LocalstackTest1Stack-LocalstackTest1Queue8672-29816a24"
+    ]
+}
+```
+
+Run `npm run local destroy` to delete the AWS stack you created in Localstack.

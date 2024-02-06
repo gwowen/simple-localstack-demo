@@ -7,6 +7,8 @@ export class LocalstackTest1Stack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    // nothing special - just create a test queue and bucket
+
     const stackTestQueue = new sqs.Queue(this, 'LocalstackTest1Queue', {
       visibilityTimeout: cdk.Duration.seconds(300)
     });
